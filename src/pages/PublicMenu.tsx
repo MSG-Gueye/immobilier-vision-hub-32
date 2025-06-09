@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Card, CardContent } from '@/components/ui/card';
@@ -6,16 +5,30 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Leaf, Utensils, Languages } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
-import { mockRestaurant, mockCategories, mockMenuItems } from '../data/restaurantData';
+import { mockRestaurants, mockCategories, mockMenuItems } from '../data/restaurantData';
 
 const PublicMenu = () => {
   const { restaurantId } = useParams();
   const { language, setLanguage, t } = useLanguage();
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
-  const categories = mockCategories.filter(cat => cat.isActive);
+  // Find the restaurant by ID from the URL parameter
+  const restaurant = mockRestaurants.find(r => r.id === restaurantId);
+  
+  if (!restaurant) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-orange-50 to-red-50 flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-800 mb-4">Restaurant non trouvé</h1>
+          <p className="text-gray-600">Le restaurant demandé n'existe pas.</p>
+        </div>
+      </div>
+    );
+  }
+
+  const categories = mockCategories.filter(cat => cat.restaurantId === restaurantId && cat.isActive);
   const menuItems = mockMenuItems.filter(item => 
-    selectedCategory ? item.categoryId === selectedCategory : true
+    item.restaurantId === restaurantId && (selectedCategory ? item.categoryId === selectedCategory : true)
   );
 
   const getCategoryName = (category: any) => {
@@ -45,8 +58,8 @@ const PublicMenu = () => {
                 <Utensils className="h-6 w-6 text-white" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-gray-800">{mockRestaurant.name}</h1>
-                <p className="text-gray-600">{mockRestaurant.description}</p>
+                <h1 className="text-2xl font-bold text-gray-800">{restaurant.name}</h1>
+                <p className="text-gray-600">{restaurant.description}</p>
               </div>
             </div>
             <Button
@@ -172,10 +185,10 @@ const PublicMenu = () => {
         <div className="container mx-auto px-4 text-center">
           <div className="flex items-center justify-center gap-2 mb-4">
             <Utensils className="h-5 w-5 text-orange-500" />
-            <span className="font-semibold">{mockRestaurant.name}</span>
+            <span className="font-semibold">{restaurant.name}</span>
           </div>
-          <p className="text-gray-600 mb-2">{mockRestaurant.address}</p>
-          <p className="text-gray-600">{mockRestaurant.phone}</p>
+          <p className="text-gray-600 mb-2">{restaurant.address}</p>
+          <p className="text-gray-600">{restaurant.phone}</p>
         </div>
       </footer>
     </div>

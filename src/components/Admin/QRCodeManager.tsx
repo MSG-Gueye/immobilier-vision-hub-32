@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -7,20 +6,29 @@ import { Label } from '@/components/ui/label';
 import { Download, Printer, QrCode, ExternalLink } from 'lucide-react';
 import { useLanguage } from '../../contexts/LanguageContext';
 import { generateQRCode, downloadQRCode } from '../../utils/qrcode';
-import { mockRestaurant } from '../../data/restaurantData';
+import { mockRestaurants } from '../../data/restaurantData';
 
-const QRCodeManager = () => {
+interface QRCodeManagerProps {
+  selectedRestaurant?: string;
+}
+
+const QRCodeManager = ({ selectedRestaurant }: QRCodeManagerProps) => {
   const { t } = useLanguage();
   const [qrCodeDataURL, setQrCodeDataURL] = useState('');
   const [menuUrl, setMenuUrl] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
 
+  // Get the selected restaurant or default to the first one
+  const restaurant = mockRestaurants.find(r => r.id === selectedRestaurant) || mockRestaurants[0];
+
   useEffect(() => {
-    const baseUrl = window.location.origin;
-    const fullMenuUrl = `${baseUrl}/menu/${mockRestaurant.id}`;
-    setMenuUrl(fullMenuUrl);
-    generateQRCodeImage(fullMenuUrl);
-  }, []);
+    if (restaurant) {
+      const baseUrl = window.location.origin;
+      const fullMenuUrl = `${baseUrl}/menu/${restaurant.id}`;
+      setMenuUrl(fullMenuUrl);
+      generateQRCodeImage(fullMenuUrl);
+    }
+  }, [restaurant]);
 
   const generateQRCodeImage = async (url: string) => {
     setIsGenerating(true);
@@ -36,7 +44,7 @@ const QRCodeManager = () => {
 
   const handleDownload = () => {
     if (qrCodeDataURL) {
-      downloadQRCode(qrCodeDataURL, `${mockRestaurant.name}-menu-qr.png`);
+      downloadQRCode(qrCodeDataURL, `${restaurant.name}-menu-qr.png`);
     }
   };
 
@@ -47,7 +55,7 @@ const QRCodeManager = () => {
         printWindow.document.write(`
           <html>
             <head>
-              <title>QR Code - ${mockRestaurant.name}</title>
+              <title>QR Code - ${restaurant.name}</title>
               <style>
                 body { 
                   font-family: Arial, sans-serif; 
@@ -82,7 +90,7 @@ const QRCodeManager = () => {
             </head>
             <body>
               <div class="qr-container">
-                <div class="restaurant-name">${mockRestaurant.name}</div>
+                <div class="restaurant-name">${restaurant.name}</div>
                 <div class="instruction">Scannez pour voir notre menu</div>
                 <img src="${qrCodeDataURL}" alt="QR Code Menu" class="qr-image" />
                 <div class="instruction">Scan to view our menu</div>
@@ -100,12 +108,16 @@ const QRCodeManager = () => {
     window.open(menuUrl, '_blank');
   };
 
+  if (!restaurant) {
+    return <div>Aucun restaurant sélectionné</div>;
+  }
+
   return (
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-bold mb-2">Générateur de QR Code</h2>
         <p className="text-gray-600">
-          Générez et téléchargez le QR code pour permettre à vos clients d'accéder facilement à votre menu.
+          Générez et téléchargez le QR code pour permettre à vos clients d'accéder facilement au menu de {restaurant.name}.
         </p>
       </div>
 
