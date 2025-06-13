@@ -1,0 +1,149 @@
+
+import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { MapPin, Bed, Bath, Maximize, Heart, Calendar, Phone } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
+
+const RentalPropertiesSection = () => {
+  const rentalProperties = [
+    {
+      id: 1,
+      title: "Studio meublé centre Nice",
+      price: 950,
+      location: "Nice Centre",
+      surface: 28,
+      rooms: 1,
+      bathrooms: 1,
+      image: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
+      description: "Studio moderne entièrement meublé, proche de tout",
+      features: ["Meublé", "Balcon", "Wifi", "Proche transports"]
+    },
+    {
+      id: 2,
+      title: "Appartement 3 pièces vue mer",
+      price: 1800,
+      location: "Cannes",
+      surface: 75,
+      rooms: 3,
+      bathrooms: 2,
+      image: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
+      description: "Magnifique appartement avec terrasse et vue mer",
+      features: ["Vue mer", "Terrasse", "Parking", "Piscine"]
+    },
+    {
+      id: 3,
+      title: "Villa 4 pièces avec jardin",
+      price: 2500,
+      location: "Antibes",
+      surface: 110,
+      rooms: 4,
+      bathrooms: 2,
+      image: "https://images.unsplash.com/photo-1605146769289-440113cc3d00?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
+      description: "Belle villa avec jardin privatif dans quartier calme",
+      features: ["Jardin", "Barbecue", "Garage", "Climatisation"]
+    }
+  ];
+
+  const handleBookVisit = (propertyId: number) => {
+    console.log(`Booking visit for property ${propertyId}`);
+    alert("Fonctionnalité de prise de rendez-vous à venir!");
+  };
+
+  return (
+    <section id="a-louer" className="py-16 bg-gray-50">
+      <div className="container mx-auto px-4">
+        <div className="text-center mb-12">
+          <h2 className="text-4xl font-bold text-gray-800 mb-4">Biens à louer</h2>
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            Trouvez votre location idéale parmi notre sélection de biens sur la Côte d'Azur. 
+            Appartements meublés, villas avec piscine, studios modernes... Il y en a pour tous les goûts.
+          </p>
+        </div>
+        
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {rentalProperties.map((property) => (
+            <Card key={property.id} className="group overflow-hidden hover:shadow-xl transition-all duration-300">
+              <div className="relative overflow-hidden">
+                <img 
+                  src={property.image} 
+                  alt={property.title}
+                  className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-300"
+                />
+                <Badge className="absolute top-4 left-4 bg-orange-600">
+                  À louer
+                </Badge>
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  className="absolute top-4 right-4 bg-white/80 hover:bg-white h-8 w-8"
+                >
+                  <Heart className="h-4 w-4 text-gray-600" />
+                </Button>
+              </div>
+              <CardContent className="p-6">
+                <h3 className="text-xl font-semibold text-gray-800 mb-2">
+                  {property.title}
+                </h3>
+                <div className="flex items-center text-gray-600 mb-3">
+                  <MapPin className="h-4 w-4 mr-1" />
+                  <span className="text-sm">{property.location}</span>
+                </div>
+                <p className="text-gray-600 text-sm mb-4">{property.description}</p>
+                
+                <div className="flex justify-between text-sm text-gray-600 mb-4">
+                  <div className="flex items-center">
+                    <Maximize className="h-4 w-4 mr-1" />
+                    <span>{property.surface}m²</span>
+                  </div>
+                  <div className="flex items-center">
+                    <Bed className="h-4 w-4 mr-1" />
+                    <span>{property.rooms}</span>
+                  </div>
+                  <div className="flex items-center">
+                    <Bath className="h-4 w-4 mr-1" />
+                    <span>{property.bathrooms}</span>
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap gap-1 mb-4">
+                  {property.features.map((feature, index) => (
+                    <Badge key={index} variant="outline" className="text-xs">
+                      {feature}
+                    </Badge>
+                  ))}
+                </div>
+
+                <div className="mb-4">
+                  <span className="text-2xl font-bold text-orange-600">
+                    {property.price}€/mois
+                  </span>
+                </div>
+                
+                <div className="flex gap-2">
+                  <Button 
+                    onClick={() => handleBookVisit(property.id)}
+                    className="flex-1 bg-orange-600 hover:bg-orange-700"
+                  >
+                    <Calendar className="h-4 w-4 mr-2" />
+                    Visiter
+                  </Button>
+                  <Button size="icon" variant="outline">
+                    <Phone className="h-4 w-4" />
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+        
+        <div className="text-center mt-12">
+          <Button className="bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700">
+            Voir tous les biens à louer
+          </Button>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default RentalPropertiesSection;

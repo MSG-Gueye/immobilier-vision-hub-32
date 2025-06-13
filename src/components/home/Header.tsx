@@ -26,11 +26,9 @@ const Header = () => {
           
           <nav className="hidden md:flex items-center gap-8">
             <a href="#" className="text-gray-700 hover:text-blue-600 transition-colors">Accueil</a>
-            <a href="#" className="text-gray-700 hover:text-blue-600 transition-colors">Biens à vendre</a>
-            <a href="#" className="text-gray-700 hover:text-blue-600 transition-colors">À louer</a>
-            <a href="#" className="text-gray-700 hover:text-blue-600 transition-colors">Services</a>
-            <a href="#" className="text-gray-700 hover:text-blue-600 transition-colors">Contact</a>
-            <a href="#" className="text-gray-700 hover:text-blue-600 transition-colors">Blog</a>
+            <a href="#biens-vendre" className="text-gray-700 hover:text-blue-600 transition-colors">Biens à vendre</a>
+            <a href="#a-louer" className="text-gray-700 hover:text-blue-600 transition-colors">À louer</a>
+            <a href="#services" className="text-gray-700 hover:text-blue-600 transition-colors">Services</a>
           </nav>
 
           <div className="flex items-center gap-3">

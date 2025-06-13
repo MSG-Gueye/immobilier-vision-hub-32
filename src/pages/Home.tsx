@@ -2,6 +2,8 @@
 import Header from '@/components/home/Header';
 import HeroSection from '@/components/home/HeroSection';
 import PropertiesSection from '@/components/home/PropertiesSection';
+import SalePropertiesSection from '@/components/home/SalePropertiesSection';
+import RentalPropertiesSection from '@/components/home/RentalPropertiesSection';
 import ServicesSection from '@/components/home/ServicesSection';
 import NewsletterSection from '@/components/home/NewsletterSection';
 import TestimonialsSection from '@/components/home/TestimonialsSection';
@@ -13,9 +15,11 @@ const HomePage = () => {
       <Header />
       <HeroSection />
       <PropertiesSection />
+      <SalePropertiesSection />
+      <RentalPropertiesSection />
       <ServicesSection />
-      <NewsletterSection />
       <TestimonialsSection />
+      <NewsletterSection />
       <Footer />
     </div>
   );
