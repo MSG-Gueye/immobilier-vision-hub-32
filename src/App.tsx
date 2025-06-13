@@ -8,6 +8,7 @@ import { LanguageProvider } from './contexts/LanguageContext';
 import Login from "./pages/Login";
 import PublicMenu from "./pages/PublicMenu";
 import AdminDashboard from "./pages/AdminDashboard";
+import HomePage from "./pages/Home";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 const queryClient = new QueryClient();
@@ -20,7 +21,7 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Navigate to="/menu/1" replace />} />
+            <Route path="/" element={<HomePage />} />
             <Route path="/menu/:restaurantId" element={<PublicMenu />} />
             <Route path="/login" element={<Login />} />
             <Route 
@@ -31,7 +32,7 @@ const App = () => (
                 </ProtectedRoute>
               } 
             />
-            <Route path="*" element={<Navigate to="/menu/1" replace />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </BrowserRouter>
       </LanguageProvider>
