@@ -1,13 +1,15 @@
 
 import { useState } from 'react';
-import { Search, MapPin, Euro, Building, Home, Users, Calendar, Star, Phone, Mail, Clock, Facebook, Twitter, Instagram, ArrowRight, Bed, Bath, Maximize } from 'lucide-react';
+import { Search, MapPin, Euro, Building, Home, Users, Calendar, Star, Phone, Mail, Clock, Facebook, Twitter, Instagram, ArrowRight, Bed, Bath, Maximize, Calculator, FileText, Heart, Eye, Share2, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { useNavigate } from 'react-router-dom';
 
 const HomePage = () => {
+  const navigate = useNavigate();
   const [searchData, setSearchData] = useState({
     type: '',
     location: '',
@@ -25,7 +27,9 @@ const HomePage = () => {
       rooms: 5,
       bathrooms: 3,
       image: "/placeholder.svg",
-      type: "Vente"
+      type: "Vente",
+      isFavorite: false,
+      views: 245
     },
     {
       id: 2,
@@ -36,7 +40,9 @@ const HomePage = () => {
       rooms: 3,
       bathrooms: 2,
       image: "/placeholder.svg",
-      type: "Location"
+      type: "Location",
+      isFavorite: true,
+      views: 189
     },
     {
       id: 3,
@@ -47,7 +53,9 @@ const HomePage = () => {
       rooms: 4,
       bathrooms: 2,
       image: "/placeholder.svg",
-      type: "Vente"
+      type: "Vente",
+      isFavorite: false,
+      views: 167
     },
     {
       id: 4,
@@ -58,7 +66,9 @@ const HomePage = () => {
       rooms: 1,
       bathrooms: 1,
       image: "/placeholder.svg",
-      type: "Location"
+      type: "Location",
+      isFavorite: false,
+      views: 298
     }
   ];
 
@@ -72,6 +82,16 @@ const HomePage = () => {
       icon: Building,
       title: "Location",
       description: "Trouvez le logement idéal parmi notre sélection de biens à louer."
+    },
+    {
+      icon: Calculator,
+      title: "Simulation prêt",
+      description: "Calculez votre capacité d'emprunt et simulez votre financement immobilier."
+    },
+    {
+      icon: FileText,
+      title: "Expertise juridique",
+      description: "Accompagnement juridique complet pour tous vos projets immobiliers."
     },
     {
       icon: Euro,
@@ -89,22 +109,47 @@ const HomePage = () => {
     {
       name: "Marie Dubois",
       text: "Service exceptionnel ! L'équipe m'a accompagnée tout au long de l'achat de ma maison. Je recommande vivement.",
-      rating: 5
+      rating: 5,
+      role: "Propriétaire"
     },
     {
       name: "Pierre Martin",
       text: "Très professionnels et à l'écoute. Ils ont vendu mon appartement en moins de 2 mois au prix souhaité.",
-      rating: 5
+      rating: 5,
+      role: "Vendeur"
     },
     {
       name: "Sophie Laurent",
       text: "Excellent suivi pour la location de mon studio. Une équipe réactive et de confiance.",
-      rating: 5
+      rating: 5,
+      role: "Locataire"
     }
   ];
 
   const formatPrice = (price: number, type: string) => {
     return type === "Location" ? `${price}€/mois` : `${price.toLocaleString()}€`;
+  };
+
+  const handleLogin = () => {
+    navigate('/login');
+  };
+
+  const toggleFavorite = (propertyId: number) => {
+    // Logique pour ajouter/retirer des favoris (à implémenter avec le backend)
+    console.log(`Toggle favorite for property ${propertyId}`);
+  };
+
+  const shareProperty = (propertyId: number) => {
+    // Logique pour partager un bien
+    if (navigator.share) {
+      navigator.share({
+        title: 'Découvrez ce bien immobilier',
+        url: `${window.location.origin}/property/${propertyId}`
+      });
+    } else {
+      // Fallback pour les navigateurs qui ne supportent pas l'API de partage
+      navigator.clipboard.writeText(`${window.location.origin}/property/${propertyId}`);
+    }
   };
 
   return (
@@ -129,11 +174,22 @@ const HomePage = () => {
               <a href="#" className="text-gray-700 hover:text-blue-600 transition-colors">À louer</a>
               <a href="#" className="text-gray-700 hover:text-blue-600 transition-colors">Services</a>
               <a href="#" className="text-gray-700 hover:text-blue-600 transition-colors">Contact</a>
+              <a href="#" className="text-gray-700 hover:text-blue-600 transition-colors">Blog</a>
             </nav>
 
-            <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
-              Espace client
-            </Button>
+            <div className="flex items-center gap-3">
+              <Button variant="outline" className="hidden md:flex items-center gap-2">
+                <Calculator className="h-4 w-4" />
+                Simulation
+              </Button>
+              <Button 
+                onClick={handleLogin}
+                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 flex items-center gap-2"
+              >
+                <User className="h-4 w-4" />
+                Connexion
+              </Button>
+            </div>
           </div>
         </div>
       </header>
@@ -170,6 +226,8 @@ const HomePage = () => {
                     <SelectItem value="maison">Maison</SelectItem>
                     <SelectItem value="villa">Villa</SelectItem>
                     <SelectItem value="studio">Studio</SelectItem>
+                    <SelectItem value="terrain">Terrain</SelectItem>
+                    <SelectItem value="commercial">Local commercial</SelectItem>
                   </SelectContent>
                 </Select>
                 
@@ -184,7 +242,8 @@ const HomePage = () => {
                     <SelectValue placeholder="Budget" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="0-500000">Jusqu'à 500 000€</SelectItem>
+                    <SelectItem value="0-200000">Jusqu'à 200 000€</SelectItem>
+                    <SelectItem value="200000-500000">200 000€ - 500 000€</SelectItem>
                     <SelectItem value="500000-1000000">500 000€ - 1M€</SelectItem>
                     <SelectItem value="1000000+">Plus de 1M€</SelectItem>
                   </SelectContent>
@@ -194,6 +253,13 @@ const HomePage = () => {
                   <Search className="h-5 w-5 mr-2" />
                   Rechercher
                 </Button>
+              </div>
+              
+              <div className="flex gap-2 mt-4">
+                <Button variant="outline" size="sm">Vente</Button>
+                <Button variant="outline" size="sm">Location</Button>
+                <Button variant="outline" size="sm">Neuf</Button>
+                <Button variant="outline" size="sm">Prestige</Button>
               </div>
             </div>
           </div>
@@ -220,6 +286,28 @@ const HomePage = () => {
                   <Badge className="absolute top-4 left-4 bg-blue-600">
                     {property.type}
                   </Badge>
+                  <div className="absolute top-4 right-4 flex gap-2">
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="bg-white/80 hover:bg-white h-8 w-8"
+                      onClick={() => toggleFavorite(property.id)}
+                    >
+                      <Heart className={`h-4 w-4 ${property.isFavorite ? 'fill-red-500 text-red-500' : 'text-gray-600'}`} />
+                    </Button>
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="bg-white/80 hover:bg-white h-8 w-8"
+                      onClick={() => shareProperty(property.id)}
+                    >
+                      <Share2 className="h-4 w-4 text-gray-600" />
+                    </Button>
+                  </div>
+                  <div className="absolute bottom-4 left-4 flex items-center gap-1 bg-black/50 text-white px-2 py-1 rounded text-xs">
+                    <Eye className="h-3 w-3" />
+                    <span>{property.views}</span>
+                  </div>
                 </div>
                 <CardContent className="p-6">
                   <h3 className="text-lg font-semibold text-gray-800 mb-2">
@@ -248,10 +336,14 @@ const HomePage = () => {
                       <span>{property.bathrooms}</span>
                     </div>
                   </div>
-                  <Button variant="outline" className="w-full group-hover:bg-blue-600 group-hover:text-white transition-colors">
-                    Voir le bien
-                    <ArrowRight className="h-4 w-4 ml-2" />
-                  </Button>
+                  <div className="flex gap-2">
+                    <Button variant="outline" className="flex-1 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                      Voir le bien
+                    </Button>
+                    <Button size="icon" variant="outline" className="group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                      <Phone className="h-4 w-4" />
+                    </Button>
+                  </div>
                 </CardContent>
               </Card>
             ))}
@@ -273,16 +365,20 @@ const HomePage = () => {
             <p className="text-xl text-gray-600">Un accompagnement sur mesure pour tous vos projets</p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {services.map((service, index) => {
               const Icon = service.icon;
               return (
-                <div key={index} className="text-center p-6 rounded-2xl hover:shadow-lg transition-all duration-300 group">
+                <div key={index} className="text-center p-6 rounded-2xl hover:shadow-lg transition-all duration-300 group border border-gray-100">
                   <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
                     <Icon className="h-8 w-8 text-white" />
                   </div>
                   <h3 className="text-xl font-semibold text-gray-800 mb-4">{service.title}</h3>
-                  <p className="text-gray-600">{service.description}</p>
+                  <p className="text-gray-600 mb-6">{service.description}</p>
+                  <Button variant="outline" className="group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                    En savoir plus
+                    <ArrowRight className="h-4 w-4 ml-2" />
+                  </Button>
                 </div>
               );
             })}
@@ -290,8 +386,25 @@ const HomePage = () => {
         </div>
       </section>
 
+      {/* Newsletter */}
+      <section className="py-16 bg-gradient-to-r from-blue-600 to-purple-600">
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="text-4xl font-bold text-white mb-4">Restez informé</h2>
+          <p className="text-xl text-blue-100 mb-8">Recevez nos dernières offres et actualités immobilières</p>
+          <div className="max-w-md mx-auto flex gap-4">
+            <Input 
+              placeholder="Votre adresse email"
+              className="bg-white/90 border-0 flex-1"
+            />
+            <Button className="bg-white text-blue-600 hover:bg-gray-100">
+              S'inscrire
+            </Button>
+          </div>
+        </div>
+      </section>
+
       {/* Témoignages */}
-      <section className="py-16 bg-gradient-to-r from-blue-50 to-purple-50">
+      <section className="py-16 bg-gray-50">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-4xl font-bold text-gray-800 mb-4">Ils nous font confiance</h2>
@@ -308,7 +421,15 @@ const HomePage = () => {
                     ))}
                   </div>
                   <p className="text-gray-600 mb-4 italic">"{testimonial.text}"</p>
-                  <p className="font-semibold text-gray-800">- {testimonial.name}</p>
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center">
+                      <User className="h-5 w-5 text-white" />
+                    </div>
+                    <div>
+                      <p className="font-semibold text-gray-800">{testimonial.name}</p>
+                      <p className="text-sm text-gray-500">{testimonial.role}</p>
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
             ))}
@@ -321,7 +442,7 @@ const HomePage = () => {
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             {/* Logo et description */}
-            <div className="md:col-span-2">
+            <div className="md:col-span-1">
               <div className="flex items-center gap-3 mb-6">
                 <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
                   <Building className="h-6 w-6 text-white" />
@@ -335,6 +456,18 @@ const HomePage = () => {
                 Spécialiste de l'immobilier sur la Côte d'Azur depuis plus de 15 ans. 
                 Nous vous accompagnons dans tous vos projets d'achat, vente et location.
               </p>
+            </div>
+
+            {/* Services rapides */}
+            <div>
+              <h4 className="text-lg font-semibold mb-6">Services</h4>
+              <div className="space-y-3">
+                <a href="#" className="block text-gray-400 hover:text-white transition-colors">Vente immobilière</a>
+                <a href="#" className="block text-gray-400 hover:text-white transition-colors">Location</a>
+                <a href="#" className="block text-gray-400 hover:text-white transition-colors">Gestion locative</a>
+                <a href="#" className="block text-gray-400 hover:text-white transition-colors">Estimation gratuite</a>
+                <a href="#" className="block text-gray-400 hover:text-white transition-colors">Simulation prêt</a>
+              </div>
             </div>
 
             {/* Contact */}
@@ -363,7 +496,7 @@ const HomePage = () => {
             {/* Réseaux sociaux */}
             <div>
               <h4 className="text-lg font-semibold mb-6">Suivez-nous</h4>
-              <div className="flex gap-4">
+              <div className="flex gap-4 mb-6">
                 <a href="#" className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center hover:bg-blue-700 transition-colors">
                   <Facebook className="h-5 w-5" />
                 </a>
@@ -373,6 +506,11 @@ const HomePage = () => {
                 <a href="#" className="w-10 h-10 bg-pink-600 rounded-lg flex items-center justify-center hover:bg-pink-700 transition-colors">
                   <Instagram className="h-5 w-5" />
                 </a>
+              </div>
+              <div className="space-y-3">
+                <a href="#" className="block text-gray-400 hover:text-white transition-colors">Mentions légales</a>
+                <a href="#" className="block text-gray-400 hover:text-white transition-colors">Politique de confidentialité</a>
+                <a href="#" className="block text-gray-400 hover:text-white transition-colors">CGV</a>
               </div>
             </div>
           </div>
