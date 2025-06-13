@@ -16,15 +16,19 @@ interface Property {
   type: string;
   isFavorite: boolean;
   views: number;
+  description?: string;
+  features?: string[];
+  images?: string[];
 }
 
 interface PropertyCardProps {
   property: Property;
   onToggleFavorite: (id: number) => void;
   onShare: (id: number) => void;
+  onViewDetails: (property: Property) => void;
 }
 
-const PropertyCard = ({ property, onToggleFavorite, onShare }: PropertyCardProps) => {
+const PropertyCard = ({ property, onToggleFavorite, onShare, onViewDetails }: PropertyCardProps) => {
   const formatPrice = (price: number, type: string) => {
     return type === "Location" ? `${price}€/mois` : `${price.toLocaleString()}€`;
   };
@@ -91,7 +95,11 @@ const PropertyCard = ({ property, onToggleFavorite, onShare }: PropertyCardProps
           </div>
         </div>
         <div className="flex gap-2">
-          <Button variant="outline" className="flex-1 group-hover:bg-blue-600 group-hover:text-white transition-colors">
+          <Button 
+            onClick={() => onViewDetails(property)}
+            variant="outline" 
+            className="flex-1 group-hover:bg-blue-600 group-hover:text-white transition-colors"
+          >
             Voir le bien
           </Button>
           <Button size="icon" variant="outline" className="group-hover:bg-blue-600 group-hover:text-white transition-colors">
