@@ -1,10 +1,12 @@
 
 import Header from '@/components/home/Header';
-import HeroSection from '@/components/home/HeroSection';
+import EnhancedHeroSection from '@/components/home/EnhancedHeroSection';
 import TrustBadgesSection from '@/components/home/TrustBadgesSection';
+import PremiumFeaturesSection from '@/components/home/PremiumFeaturesSection';
 import PropertiesSection from '@/components/home/PropertiesSection';
 import SalePropertiesSection from '@/components/home/SalePropertiesSection';
 import RentalPropertiesSection from '@/components/home/RentalPropertiesSection';
+import MarketInsightsSection from '@/components/home/MarketInsightsSection';
 import StatsSection from '@/components/home/StatsSection';
 import WhyChooseUsSection from '@/components/home/WhyChooseUsSection';
 import ServicesSection from '@/components/home/ServicesSection';
@@ -17,11 +19,13 @@ const HomePage = () => {
   return (
     <div className="min-h-screen bg-white">
       <Header />
-      <HeroSection />
+      <EnhancedHeroSection />
       <TrustBadgesSection />
+      <PremiumFeaturesSection />
       <PropertiesSection />
       <SalePropertiesSection />
       <RentalPropertiesSection />
+      <MarketInsightsSection />
       <StatsSection />
       <WhyChooseUsSection />
       <ServicesSection />
