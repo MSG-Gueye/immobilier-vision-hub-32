@@ -1,17 +1,21 @@
 import { useState } from 'react';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { MapPin, Bed, Bath, Maximize, Heart, Calendar, Phone } from 'lucide-react';
+import { MapPin, Bed, Bath, Maximize, Heart, Calendar, Phone, X } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import PropertyDetailsModal from './PropertyDetailsModal';
-import AllRentalPropertiesModal from './AllRentalPropertiesModal';
 
-const RentalPropertiesSection = () => {
+interface AllRentalPropertiesModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+const AllRentalPropertiesModal = ({ isOpen, onClose }: AllRentalPropertiesModalProps) => {
   const [selectedProperty, setSelectedProperty] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isAllPropertiesOpen, setIsAllPropertiesOpen] = useState(false);
+  const [isPropertyModalOpen, setIsPropertyModalOpen] = useState(false);
 
-  const rentalProperties = [
+  const allRentalProperties = [
     {
       id: 1,
       title: "Studio meublé centre Nice",
@@ -65,12 +69,85 @@ const RentalPropertiesSection = () => {
       images: [
         "https://images.unsplash.com/photo-1605146769289-440113cc3d00?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80"
       ]
+    },
+    // Nouvelles locations
+    {
+      id: 4,
+      title: "Loft industriel rénové",
+      price: 1400,
+      location: "Marseille",
+      surface: 85,
+      rooms: 2,
+      bathrooms: 1,
+      image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
+      description: "Loft atypique dans ancien entrepôt, très lumineux",
+      features: ["Atypique", "Lumineux", "Parking", "Proche métro"],
+      type: "Location",
+      isFavorite: false,
+      views: 156,
+      images: [
+        "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80"
+      ]
+    },
+    {
+      id: 5,
+      title: "Duplex avec terrasse privative",
+      price: 2200,
+      location: "Monaco",
+      surface: 110,
+      rooms: 4,
+      bathrooms: 2,
+      image: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
+      description: "Duplex moderne avec grande terrasse et vue mer",
+      features: ["Duplex", "Terrasse", "Vue mer", "Climatisation"],
+      type: "Location",
+      isFavorite: false,
+      views: 289,
+      images: [
+        "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80"
+      ]
+    },
+    {
+      id: 6,
+      title: "Maison de village provençale",
+      price: 1800,
+      location: "Vence",
+      surface: 95,
+      rooms: 3,
+      bathrooms: 2,
+      image: "https://images.unsplash.com/photo-1605146769289-440113cc3d00?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
+      description: "Charmante maison dans village perché, calme absolu",
+      features: ["Village perché", "Cheminée", "Jardin", "Calme"],
+      type: "Location",
+      isFavorite: false,
+      views: 134,
+      images: [
+        "https://images.unsplash.com/photo-1605146769289-440113cc3d00?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80"
+      ]
+    },
+    {
+      id: 7,
+      title: "Appartement neuf avec piscine",
+      price: 1650,
+      location: "Cannes",
+      surface: 68,
+      rooms: 2,
+      bathrooms: 1,
+      image: "https://images.unsplash.com/photo-1570129477492-45c003edd2be?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80",
+      description: "Appartement neuf dans résidence avec piscine et conciergerie",
+      features: ["Neuf", "Piscine", "Conciergerie", "Parking"],
+      type: "Location",
+      isFavorite: false,
+      views: 198,
+      images: [
+        "https://images.unsplash.com/photo-1570129477492-45c003edd2be?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80"
+      ]
     }
   ];
 
   const handleViewProperty = (property: any) => {
     setSelectedProperty(property);
-    setIsModalOpen(true);
+    setIsPropertyModalOpen(true);
   };
 
   const toggleFavorite = (propertyId: number) => {
@@ -90,24 +167,25 @@ const RentalPropertiesSection = () => {
 
   return (
     <>
-      <section id="a-louer" className="py-16 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-4xl font-bold text-gray-800 mb-4">Biens à louer</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Trouvez votre location idéale parmi notre sélection de biens sur la Côte d'Azur. 
-              Appartements meublés, villas avec piscine, studios modernes... Il y en a pour tous les goûts.
-            </p>
-          </div>
+      <Dialog open={isOpen} onOpenChange={onClose}>
+        <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="flex items-center justify-between">
+              <span>Tous les biens à louer</span>
+              <Button variant="ghost" size="icon" onClick={onClose}>
+                <X className="h-4 w-4" />
+              </Button>
+            </DialogTitle>
+          </DialogHeader>
           
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {rentalProperties.map((property) => (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-4">
+            {allRentalProperties.map((property) => (
               <Card key={property.id} className="group overflow-hidden hover:shadow-xl transition-all duration-300">
                 <div className="relative overflow-hidden">
                   <img 
                     src={property.image} 
                     alt={property.title}
-                    className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-300"
+                    className="w-full h-48 object-cover group-hover:scale-110 transition-transform duration-300"
                   />
                   <Badge className="absolute top-4 left-4 bg-orange-600">
                     À louer
@@ -121,8 +199,8 @@ const RentalPropertiesSection = () => {
                     <Heart className="h-4 w-4 text-gray-600" />
                   </Button>
                 </div>
-                <CardContent className="p-6">
-                  <h3 className="text-xl font-semibold text-gray-800 mb-2">
+                <CardContent className="p-4">
+                  <h3 className="text-lg font-semibold text-gray-800 mb-2">
                     {property.title}
                   </h3>
                   <div className="flex items-center text-gray-600 mb-3">
@@ -155,7 +233,7 @@ const RentalPropertiesSection = () => {
                   </div>
 
                   <div className="mb-4">
-                    <span className="text-2xl font-bold text-orange-600">
+                    <span className="text-xl font-bold text-orange-600">
                       {property.price}€/mois
                     </span>
                   </div>
@@ -176,32 +254,18 @@ const RentalPropertiesSection = () => {
               </Card>
             ))}
           </div>
-          
-          <div className="text-center mt-12">
-            <Button 
-              onClick={() => setIsAllPropertiesOpen(true)}
-              className="bg-gradient-to-r from-orange-600 to-red-600 hover:from-orange-700 hover:to-red-700"
-            >
-              Voir tous les biens à louer
-            </Button>
-          </div>
-        </div>
-      </section>
+        </DialogContent>
+      </Dialog>
 
       <PropertyDetailsModal
         property={selectedProperty}
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
+        isOpen={isPropertyModalOpen}
+        onClose={() => setIsPropertyModalOpen(false)}
         onToggleFavorite={toggleFavorite}
         onShare={shareProperty}
-      />
-
-      <AllRentalPropertiesModal
-        isOpen={isAllPropertiesOpen}
-        onClose={() => setIsAllPropertiesOpen(false)}
       />
     </>
   );
 };
 
-export default RentalPropertiesSection;
+export default AllRentalPropertiesModal;

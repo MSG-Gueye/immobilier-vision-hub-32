@@ -1,5 +1,5 @@
 
-import { Building, Calculator, User } from 'lucide-react';
+import { Building, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router-dom';
 
@@ -32,10 +32,6 @@ const Header = () => {
           </nav>
 
           <div className="flex items-center gap-3">
-            <Button variant="outline" className="hidden md:flex items-center gap-2">
-              <Calculator className="h-4 w-4" />
-              Simulation
-            </Button>
             <Button 
               onClick={handleLogin}
               className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 flex items-center gap-2"
